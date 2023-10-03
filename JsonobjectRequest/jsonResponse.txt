@@ -1,0 +1,74 @@
+package com.krjoshi.volley_demo;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Bundle;
+import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        String url = "http://192.168.1.68:8080/member";
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        ListView listView = findViewById(R.id.list1);
+        ArrayList<String> donorNames = new ArrayList<>() ;
+        //add garne
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+
+
+
+donorNames.add("Khem raj joshi");
+
+donorNames.add("Khem raj joshi");
+
+donorNames.add("Khem raj joshi");
+
+
+
+      JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+          @Override
+          public void onResponse(JSONObject response) {
+              Toast.makeText(getApplicationContext(), "Response :" + response.toString(), Toast.LENGTH_LONG).show();
+             try{
+                 Toast.makeText(getApplicationContext(),"let us access the jsob object",Toast.LENGTH_SHORT).show();
+                 Log.d("myapp",response.getString("firstName"));
+                 donorNames.add(response.getString("firstName"));
+             }
+             catch (Exception e)
+             {
+                 e.printStackTrace();
+             }
+          }
+      },new Response.ErrorListener(){
+              @Override
+              public void onErrorResponse(VolleyError error) {
+                  Toast.makeText(getApplicationContext(),"error occurred"   ,Toast.LENGTH_SHORT).show();
+              }
+
+
+      });
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,donorNames);
+        listView.setAdapter(arrayAdapter);
+
+      requestQueue.add(jsonObjectRequest);
+
+
+
+    }
+}
